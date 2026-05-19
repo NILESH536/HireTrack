@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: hirectrack
+      POSTGRES_USER: hirectrack
+      POSTGRES_PASSWORD: hirectrack_secret
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hirectrack"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles: []   # always running (no profile)
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/hirectrack
+      SPRING_DATASOURCE_USERNAME: hirectrack
+      SPRING_DATASOURCE_PASSWORD: hirectrack_secret
+      MAIL_USERNAME: ${MAIL_USERNAME:-yourmail@gmail.com}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-your-app-password}
+      CLAUDE_API_KEY: ${CLAUDE_API_KEY:-your-api-key}
+      JWT_SECRET: ${JWT_SECRET:-change-me-to-long-secret}
+    volumes:
+      - app_uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    profiles: []
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+    profiles: []
+
+  # Monitoring (optional profile)
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    profiles: ["monitoring"]
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+    profiles: ["monitoring"]
+
+  # Spring Boot Admin (alternative to Prometheus/Grafana)
+  # admin:
+  #   image: michaya/spring-boot-admin:latest
+  #   environment:
+  #     SPRING_BOOT_ADMIN_CLIENT_URL: http://app:8080
+  #   ports:
+  #     - "9090:8080"
+  #   profiles: ["admin"]
+
+volumes:
+  db_data:
+  app_uploads:
