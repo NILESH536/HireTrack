@@ -2,7 +2,17 @@
 
 ![HireTrack Banner](https://via.placeholder.com/1200x300.png?text=HireTrack+-+Next+Gen+Campus+Placement+Platform)
 
-**HireTrack** is an advanced, AI-powered campus placement and recruitment platform designed to bridge the gap between students, universities, and companies. It streamlines the placement process with a comprehensive suite of tools for applicant tracking, resume parsing, interview scheduling, and AI-driven career guidance.
+**HireTrack** is an advanced, AI-powered campus placement and recruitment platform designed to bridge the gap between students, universities, and companies. Built with modern web technologies and integrating bleeding-edge Google Gemini AI capabilities, HireTrack offers a holistic approach to the often-chaotic college placement ecosystem.
+
+At its core, **HireTrack** solves the administrative overhead and lack of personalization in traditional campus recruitment. By offering distinct portals for different stakeholders, the platform ensures a seamless flow of information. 
+
+### The Problem It Solves
+Traditional placement management relies heavily on spreadsheets, manual resume screening, and disjointed email threads. This leads to missed opportunities for students, inefficient hiring pipelines for companies, and massive administrative burdens for universities. HireTrack unifies these processes into a single, intuitive platform where every action—from announcing a placement drive to the final job offer—is tracked and managed in real-time.
+
+### Stakeholder Portals
+- **For Students:** Provides a personalized dashboard to track job applications, maintain a centralized profile, and leverage AI to analyze their resumes against industry standards. The AI Career Assistant acts as a virtual mentor, guiding students on skill gaps and interview preparation.
+- **For Companies:** Offers robust tools to create and broadcast placement drives, manage applications through an applicant tracking system (ATS), and efficiently schedule interview timelines without leaving the platform.
+- **For Administrators:** Grants comprehensive oversight of the entire placement season, complete with analytics and reporting tools to measure success rates and track student placements dynamically.
 
 ---
 
