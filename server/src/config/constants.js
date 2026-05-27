@@ -1,0 +1,40 @@
+module.exports = {
+  ROLES: {
+    STUDENT: 'STUDENT',
+    COMPANY: 'COMPANY',
+    ADMIN: 'ADMIN',
+  },
+  APPLICATION_STATUS: {
+    IN_PROGRESS: 'IN_PROGRESS',
+    SELECTED: 'SELECTED',
+    REJECTED: 'REJECTED',
+    ON_HOLD: 'ON_HOLD',
+  },
+  ROUND_TYPES: [
+    'APTITUDE_TEST',
+    'TECHNICAL_ROUND_1',
+    'TECHNICAL_ROUND_2',
+    'HR_ROUND',
+  ],
+  JOB_TYPES: ['FULL_TIME', 'INTERNSHIP', 'BOTH'],
+  INTERVIEW_MODES: ['ONLINE', 'OFFLINE'],
+  BRANCHES: [
+    'Computer Science',
+    'Information Technology',
+    'Electronics',
+    'Electrical',
+    'Mechanical',
+    'Civil',
+    'Chemical',
+    'Aerospace',
+    'Biotechnology',
+  ],
+  NOTIFICATION_TYPES: {
+    DRIVE_POSTED: 'DRIVE_POSTED',
+    APPLICATION_UPDATE: 'APPLICATION_UPDATE',
+    INTERVIEW_SCHEDULED: 'INTERVIEW_SCHEDULED',
+    RESULT_ANNOUNCED: 'RESULT_ANNOUNCED',
+    COMPANY_APPROVED: 'COMPANY_APPROVED',
+    COMPANY_REJECTED: 'COMPANY_REJECTED',
+  },
+};
