@@ -29,7 +29,7 @@ const LandingPage = () => {
           </motion.div>
 
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-6">
-            <span className="gradient-text">Your Career,</span><br /><span className="text-white">Digitally Accelerated</span>
+            <span className="gradient-text">NILESH,</span><br /><span className="text-white">Digitally Accelerated</span>
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-12">
