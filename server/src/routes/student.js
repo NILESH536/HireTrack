@@ -14,6 +14,7 @@ router.get('/applications', studentController.getApplications);
 router.get('/interviews', studentController.getInterviews);
 router.post('/resume', upload.single('resume'), studentController.uploadResume);
 router.post('/analyze-fit', studentController.analyzeResumeFit);
+router.post('/analyze-ats', studentController.analyzeATS);
 router.get('/profile', studentController.getProfile);
 router.put('/profile', studentController.updateProfile);
 

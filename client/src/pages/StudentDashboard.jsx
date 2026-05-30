@@ -11,6 +11,7 @@ import SkillRadar from '../components/student/SkillRadar';
 import InterviewTimeline from '../components/student/InterviewTimeline';
 import CareerGuide from '../components/student/CareerGuide';
 import ResumeUploader from '../components/student/ResumeUploader';
+import ResumeAnalyzer from '../components/student/ResumeAnalyzer';
 import ConstellationBackground from '../components/backgrounds/ConstellationBackground';
 import { getGreeting } from '../utils/helpers';
 import { FiMessageCircle } from 'react-icons/fi';
@@ -130,6 +131,9 @@ const StudentDashboard = () => {
             </RevealSection>
             <RevealSection delay={0.3}>
               <ResumeUploader onUpload={fetchData} />
+            </RevealSection>
+            <RevealSection delay={0.4}>
+              <ResumeAnalyzer student={data?.student} />
             </RevealSection>
           </div>
           <div className="space-y-8">

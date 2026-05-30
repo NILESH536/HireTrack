@@ -40,6 +40,7 @@ export const studentService = {
   getInterviews: () => api.get('/student/interviews'),
   uploadResume: (formData) => api.post('/student/resume', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
   analyzeFit: (driveId) => api.post('/student/analyze-fit', { driveId }),
+  analyzeATS: (data) => api.post('/student/analyze-ats', data),
   getProfile: () => api.get('/student/profile'),
   updateProfile: (data) => api.put('/student/profile', data),
 };

@@ -7,10 +7,19 @@ class GeminiService {
     this.model = null;
   }
 
-  init() {
+  init(systemInstruction) {
     if (!this.genAI && process.env.GEMINI_API_KEY) {
       this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-      this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    }
+    if (this.genAI) {
+      const config = { model: 'gemini-2.5-flash' };
+      if (systemInstruction) {
+        config.systemInstruction = {
+          role: 'user',
+          parts: [{ text: systemInstruction }],
+        };
+      }
+      this.model = this.genAI.getGenerativeModel(config);
     }
   }
 
@@ -59,10 +68,9 @@ Your Guidelines:
         parts: [{ text: msg.message }],
       }));
 
-      this.init();
+      this.init(systemPrompt);
       const chat = this.model.startChat({
         history,
-        systemInstruction: systemPrompt,
         generationConfig: {
           maxOutputTokens: 1024,
           temperature: 0.7,
@@ -78,6 +86,56 @@ Your Guidelines:
         return 'AI service authentication failed. Please check your Gemini API key.';
       }
       return "I apologize, but I'm having trouble connecting right now. Please try again in a moment.";
+    }
+  }
+
+  async analyzeResumeATS(resumeText, studentContext, jobDescription) {
+    if (!this.isConfigured()) {
+      throw new Error('AI analysis is not configured. Please set the GEMINI_API_KEY.');
+    }
+
+    try {
+      const jdSection = jobDescription
+        ? `\nJOB DESCRIPTION TO MATCH AGAINST:\n${jobDescription}`
+        : '';
+
+      const prompt = `You are an expert ATS (Applicant Tracking System) resume analyzer and career advisor.
+
+Analyze the following resume thoroughly and return a JSON object with EXACTLY these fields:
+
+1. "atsScore": number 0-100 (overall ATS compatibility score)
+2. "formatScore": number 0-100 (how well-formatted for ATS parsing)
+3. "contentScore": number 0-100 (quality of content, action verbs, quantified achievements)
+4. "keywordScore": number 0-100 (relevant industry keyword density)
+5. "matchingSkills": array of strings — skills found in the resume that are strong and relevant
+6. "missingSkills": array of objects {skill: string, importance: "critical"|"important"|"nice-to-have"} — skills missing from the resume that are important for the target role
+7. "futureSkills": array of objects {skill: string, reason: string, priority: "high"|"medium"|"low", resources: string} — skills the student should learn next for their career goal "${studentContext.careerGoal || 'Software Developer'}" considering their branch "${studentContext.branch || 'CS'}"
+8. "formatIssues": array of strings — specific formatting problems that hurt ATS parsing
+9. "strengths": array of strings — what the resume does well (max 5)
+10. "suggestions": array of objects {category: "content"|"format"|"keywords"|"impact", suggestion: string, priority: "high"|"medium"|"low"} — actionable improvements
+11. "summary": string — 2-3 sentence executive summary of the resume quality
+12. "sectionAnalysis": object with keys "experience", "education", "skills", "projects" each having {score: number 0-100, feedback: string}
+${jdSection ? '13. "jobMatchScore": number 0-100 — how well the resume matches the specific job description' : ''}
+
+Return ONLY valid JSON, no markdown formatting, no backticks.
+
+RESUME:
+${resumeText}
+${jdSection}`;
+
+      this.init();
+      const result = await this.model.generateContent(prompt);
+      const text = result.response.text();
+
+      // Extract JSON from the response
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        return JSON.parse(jsonMatch[0]);
+      }
+      return JSON.parse(text);
+    } catch (error) {
+      logger.error('ATS analysis error:', error.message || error);
+      throw new Error('Failed to analyze resume. Please try again.');
     }
   }
 

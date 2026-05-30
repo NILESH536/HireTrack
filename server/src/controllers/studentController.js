@@ -234,6 +234,39 @@ exports.analyzeResumeFit = asyncHandler(async (req, res) => {
   res.json({ analysis });
 });
 
+// ──────────── ATS Resume Analysis ────────────
+exports.analyzeATS = asyncHandler(async (req, res) => {
+  const { jobDescription, driveId } = req.body;
+  const student = await Student.findOne({
+    where: { userId: req.user.id },
+    include: [{ model: User, as: 'user' }],
+  });
+  if (!student) return res.status(404).json({ message: 'Student profile not found' });
+
+  if (!student.resumeText) {
+    return res.status(400).json({ message: 'Please upload your resume first to analyze it.' });
+  }
+
+  // If driveId is provided, fetch the job description from the drive
+  let jd = jobDescription || '';
+  if (driveId && !jd) {
+    const drive = await Drive.findByPk(driveId);
+    if (drive) jd = drive.jobDescription || '';
+  }
+
+  const studentContext = {
+    name: student.user.name,
+    branch: student.branch,
+    cgpa: student.cgpa,
+    skills: student.skills,
+    careerGoal: student.careerGoal,
+  };
+
+  const analysis = await geminiService.analyzeResumeATS(student.resumeText, studentContext, jd);
+
+  res.json({ analysis });
+});
+
 // ──────────── Profile ────────────
 exports.getProfile = asyncHandler(async (req, res) => {
   const student = await Student.findOne({
