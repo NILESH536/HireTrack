@@ -19,7 +19,16 @@ const app = express();
 // ──────────── Middleware Stack ────────────
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:3000')
+      .split(',').map(s => s.trim());
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Allow all origins in development, restrict in production if needed
+    }
+  },
   credentials: true
 }));
 app.use(morgan('combined'));

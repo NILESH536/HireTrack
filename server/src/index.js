@@ -11,7 +11,7 @@ const startServer = async () => {
     logger.info('✅ Database connected successfully');
 
     // Sync models (use migrations in production)
-    await sequelize.sync({ alter: process.env.NODE_ENV === 'development' });
+    await sequelize.sync({ alter: true });
     logger.info('✅ Database models synchronized');
 
     app.listen(PORT, () => {
