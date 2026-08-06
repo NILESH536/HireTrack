@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const config = {
   // Provider can be 'GEMINI', 'CLAUDE', 'OPENAI', 'MOCK'
-  defaultProvider: process.env.AI_PROVIDER || 'OPENAI',
+  defaultProvider: process.env.AI_PROVIDER || 'GEMINI',
 
   providers: {
     GEMINI: {

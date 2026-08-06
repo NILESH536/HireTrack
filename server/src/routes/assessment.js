@@ -14,6 +14,12 @@ router.post(
   assessmentController.createAssessment
 );
 
+router.get(
+  '/', 
+  roleCheck(ROLES.COMPANY, ROLES.ADMIN), 
+  assessmentController.getAssessments
+);
+
 router.post(
   '/:id/questions', 
   roleCheck(ROLES.COMPANY, ROLES.ADMIN), 

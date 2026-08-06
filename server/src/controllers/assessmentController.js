@@ -16,6 +16,15 @@ exports.createAssessment = asyncHandler(async (req, res) => {
   return responseBuilder.success(res, assessment, 'Assessment created successfully', 201);
 });
 
+exports.getAssessments = asyncHandler(async (req, res) => {
+  const company = await Company.findOne({ where: { userId: req.user.id } });
+  if (!company) throw new NotFoundError('Company not found');
+
+  const { Assessment } = require('../models');
+  const assessments = await Assessment.findAll({ where: { companyId: company.id } });
+  return responseBuilder.success(res, assessments, 'Assessments fetched successfully');
+});
+
 exports.addQuestions = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const questions = await assessmentService.addQuestions(id, req.body.questions);
