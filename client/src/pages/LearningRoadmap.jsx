@@ -31,7 +31,7 @@ const LearningRoadmap = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="min-h-screen bg-navy-950 relative">
+    <div className="h-screen bg-navy-950 relative overflow-y-auto overflow-x-hidden">
       <AuroraBackground />
       <Navbar />
       <main className="relative max-w-5xl mx-auto px-4 py-8 pt-24">
@@ -97,16 +97,31 @@ const LearningRoadmap = () => {
                           <p className="text-sm text-gray-400">{node.topics?.join(', ')}</p>
                           <h4 className="text-xs font-semibold text-gray-300 uppercase tracking-wider mt-4">Resources:</h4>
                           <ul className="space-y-1">
-                            {node.resources?.map((res, rIdx) => (
-                              <li key={rIdx} className="text-xs text-electric hover:underline cursor-pointer flex items-center gap-2">
-                                <div className="w-1 h-1 rounded-full bg-electric" /> {res}
-                              </li>
-                            ))}
+                            {node.resources?.map((res, rIdx) => {
+                              const urlMatch = res.match(/(https?:\/\/[^\s]+)/);
+                              const text = urlMatch ? res.replace(urlMatch[0], '').trim() : res;
+                              const url = urlMatch ? urlMatch[0] : null;
+                              return (
+                                <li key={rIdx} className="text-xs text-electric hover:underline cursor-pointer flex items-center gap-2">
+                                  <div className="w-1 h-1 rounded-full bg-electric flex-shrink-0" /> 
+                                  {url ? (
+                                    <a href={url} target="_blank" rel="noopener noreferrer" className="block text-electric hover:text-cyan break-all">
+                                      {text || url}
+                                    </a>
+                                  ) : (
+                                    <span>{res}</span>
+                                  )}
+                                </li>
+                              );
+                            })}
                           </ul>
                         </div>
                         
                         {!isCompleted && !isLocked && (
-                          <button className="mt-6 w-full py-2 bg-electric/10 text-electric hover:bg-electric/20 rounded-lg text-sm font-semibold transition-colors border border-electric/20">
+                          <button 
+                            onClick={() => toast.success('Module started! Good luck with your learning.')}
+                            className="mt-6 w-full py-2 bg-electric/10 text-electric hover:bg-electric/20 rounded-lg text-sm font-semibold transition-colors border border-electric/20"
+                          >
                             Start Module
                           </button>
                         )}

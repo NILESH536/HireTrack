@@ -9,6 +9,10 @@ class AIProvider {
   isConfigured() {
     throw new Error("Method 'isConfigured()' must be implemented.");
   }
+
+  async generateInterviewVerdict(transcript) {
+    throw new Error("Method 'generateInterviewVerdict()' must be implemented.");
+  }
 }
 
 module.exports = AIProvider;

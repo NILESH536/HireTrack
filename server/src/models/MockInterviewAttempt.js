@@ -36,6 +36,6 @@ const MockInterviewAttempt = sequelize.define('MockInterviewAttempt', {
     type: DataTypes.JSONB,
     allowNull: true,
   },
-});
+}, { tableName: 'mock_interview_attempts', underscored: true });
 
 module.exports = MockInterviewAttempt;

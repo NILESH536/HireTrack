@@ -1,0 +1,21 @@
+name: Docker Validation
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  docker-build:
+    name: Validate Docker Configuration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build Docker Images
+        run: docker compose -f docker-compose.yml build
+        
+      # To test if it runs cleanly, we'd need the real DB URL and API keys. 
+      # We just validate the build step passes. If environment variables were provided
+      # via secrets, we could run `docker compose up -d` and test the healthcheck here.

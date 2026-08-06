@@ -1,10 +1,31 @@
 FROM node:18-alpine
+
+# Add necessary build tools for native dependencies (like bcrypt or sqlite3)
+RUN apk add --no-cache python3 make g++ 
+
+# Create app directory and necessary folders with correct permissions FIRST
 WORKDIR /app
-COPY server/package*.json ./
-RUN npm ci --only=production
-COPY server/ ./
-RUN mkdir -p /app/logs && chmod -R 777 /app/logs
-RUN mkdir -p uploads && chmod -R 777 uploads
-EXPOSE 5000
+RUN mkdir -p /app/logs /app/uploads && chown -R node:node /app
+
+# Switch to non-root user for security
 USER node
+
+# Install app dependencies
+COPY --chown=node:node server/package*.json ./
+
+# Ensure production installation (skips devDependencies)
+ENV NODE_ENV=production
+RUN npm ci --only=production
+
+# Copy application source code
+COPY --chown=node:node server/ ./
+
+# Expose API port
+EXPOSE 5000
+
+# Add a healthcheck to ensure Docker knows if the Node process is healthy
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:5000/api/health || exit 1
+
+# Start the application
 CMD ["node", "src/index.js"]

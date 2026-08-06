@@ -67,6 +67,6 @@ const Application = sequelize.define('Application', {
     allowNull: true,
     field: 'rejection_reason',
   },
-});
+}, { tableName: 'applications', underscored: true });
 
 module.exports = Application;

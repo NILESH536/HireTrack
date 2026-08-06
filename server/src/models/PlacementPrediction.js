@@ -67,6 +67,6 @@ const PlacementPrediction = sequelize.define('PlacementPrediction', {
     defaultValue: [],
     field: 'company_recommendations',
   }
-});
+}, { tableName: 'placement_predictions', underscored: true });
 
 module.exports = PlacementPrediction;

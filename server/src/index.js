@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('dns').setDefaultResultOrder('ipv4first');
 const app = require('./app');
 const { sequelize } = require('./config/database');
 const logger = require('./utils/logger');
@@ -10,9 +11,7 @@ const startServer = async () => {
     await sequelize.authenticate();
     logger.info('✅ Database connected successfully');
 
-    // Sync models (use migrations in production)
-    await sequelize.sync();
-    logger.info('✅ Database connected');
+    // Models are synchronized via migrations.
 
     app.listen(PORT, () => {
       logger.info(`🚀 Server running on port ${PORT}`);

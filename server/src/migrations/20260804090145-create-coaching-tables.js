@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('MockInterviewAttempts', {
+    await queryInterface.createTable('mock_interview_attempts', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -12,7 +12,7 @@ module.exports = {
       student_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'Students', key: 'id' },
+        references: { model: 'students', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
@@ -28,11 +28,11 @@ module.exports = {
       },
       overall_score: { type: Sequelize.INTEGER, allowNull: true },
       feedback: { type: Sequelize.JSONB, allowNull: true },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
 
-    await queryInterface.createTable('MockInterviewQuestions', {
+    await queryInterface.createTable('mock_interview_questions', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -41,7 +41,7 @@ module.exports = {
       attempt_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'MockInterviewAttempts', key: 'id' },
+        references: { model: 'mock_interview_attempts', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
@@ -50,11 +50,11 @@ module.exports = {
       ai_feedback: { type: Sequelize.JSONB, allowNull: true },
       score: { type: Sequelize.INTEGER, allowNull: true },
       order_index: { type: Sequelize.INTEGER, allowNull: false },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
 
-    await queryInterface.createTable('LearningRoadmaps', {
+    await queryInterface.createTable('learning_roadmaps', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -63,7 +63,7 @@ module.exports = {
       student_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'Students', key: 'id' },
+        references: { model: 'students', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
@@ -73,15 +73,15 @@ module.exports = {
         allowNull: false,
         defaultValue: 'ACTIVE',
       },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('LearningRoadmaps');
-    await queryInterface.dropTable('MockInterviewQuestions');
-    await queryInterface.dropTable('MockInterviewAttempts');
+    await queryInterface.dropTable('learning_roadmaps');
+    await queryInterface.dropTable('mock_interview_questions');
+    await queryInterface.dropTable('mock_interview_attempts');
 
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_LearningRoadmaps_status";');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_MockInterviewAttempts_interview_type";');

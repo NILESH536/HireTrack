@@ -40,6 +40,6 @@ const Question = sequelize.define('Question', {
     allowNull: true,
     field: 'test_cases',
   },
-});
+}, { tableName: 'questions', underscored: true });
 
 module.exports = Question;

@@ -41,6 +41,6 @@ const AuditLog = sequelize.define('AuditLog', {
     allowNull: true,
     field: 'user_agent',
   },
-});
+}, { tableName: 'audit_logs', underscored: true });
 
 module.exports = AuditLog;

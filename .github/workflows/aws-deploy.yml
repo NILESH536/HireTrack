@@ -1,0 +1,33 @@
+name: AWS EC2 Deployment (Template)
+
+on:
+  # push:
+  #   branches: [ "main" ]
+  workflow_dispatch: # Manual trigger for now
+
+jobs:
+  deploy:
+    name: Deploy to AWS EC2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # - name: Setup SSH
+      #   uses: webfactory/ssh-agent@v0.8.0
+      #   with:
+      #     ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      # - name: Deploy with Docker Compose
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+      #       cd /home/ec2-user/hiretrack
+      #       git pull origin main
+      #       # Inject secrets directly into .env or export them
+      #       echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > server/.env
+      #       echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> server/.env
+      #       echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> server/.env
+      #       echo "AI_PROVIDER=OPENAI" >> server/.env
+      #       
+      #       docker compose -f docker-compose.prod.yml up --build -d
+      #       docker system prune -f
+      #     EOF

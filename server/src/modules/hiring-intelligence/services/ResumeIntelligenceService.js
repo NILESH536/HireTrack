@@ -2,6 +2,7 @@ const { Resume, Student } = require('../../../models');
 const resumeParser = require('../../../services/resumeParser');
 const ExplainableAIFramework = require('./ExplainableAIFramework');
 const logger = require('../../../utils/logger');
+const { BadRequestError } = require('../../../utils/errors');
 
 class ResumeIntelligenceService {
   constructor(provider) {
@@ -46,6 +47,10 @@ class ResumeIntelligenceService {
       
       const analysisResult = await this.provider.analyzeResumeATS(rawText, studentContext, null);
       
+      if (analysisResult.isResume === false) {
+        throw new BadRequestError(analysisResult.rejectionReason || 'The uploaded document does not appear to be a valid resume or CV.');
+      }
+      
       atsScore = analysisResult.atsScore || 0;
       aiSummary = analysisResult.summary || '';
       
@@ -64,6 +69,9 @@ class ResumeIntelligenceService {
       }
 
     } catch (error) {
+      if (error instanceof BadRequestError) {
+        throw error;
+      }
       logger.warn(`AI Analysis failed during resume upload for student ${studentId}: ${error.message}`);
     }
 

@@ -44,6 +44,6 @@ const Company = sequelize.define('Company', {
     defaultValue: 'PENDING',
     field: 'approval_status',
   },
-});
+}, { tableName: 'companies', underscored: true });
 
 module.exports = Company;

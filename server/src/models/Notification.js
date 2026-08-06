@@ -35,6 +35,6 @@ const Notification = sequelize.define('Notification', {
     allowNull: false,
     defaultValue: 'LOW',
   },
-});
+}, { tableName: 'notifications', underscored: true });
 
 module.exports = Notification;

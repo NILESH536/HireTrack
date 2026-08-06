@@ -35,6 +35,6 @@ const MockInterviewQuestion = sequelize.define('MockInterviewQuestion', {
     allowNull: false,
     field: 'order_index',
   },
-});
+}, { tableName: 'mock_interview_questions', underscored: true });
 
 module.exports = MockInterviewQuestion;

@@ -1,34 +1,54 @@
 # Dependencies
+node_modules
 client/node_modules
 server/node_modules
-node_modules
 
 # Build output
 client/build
+server/build
 
 # Git
 .git
 .github
+.gitignore
 
-# Logs
+# Env files - CRITICAL for security
+.env
+.env.*
+!.env.example
+
+# Logs and Data
+logs
 server/logs
+client/logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+uploads
+server/uploads
 
 # IDE
 .vscode
 .idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # OS
 .DS_Store
 Thumbs.db
+._*
 
 # Docker
 docker-compose.yml
 Dockerfile.*
+.dockerignore
 
-# CI
+# CI & Misc
 Jenkinsfile
-
-# Misc
 README.md
-.env.example
+API_DOCS.md
+ARCHITECTURE.md

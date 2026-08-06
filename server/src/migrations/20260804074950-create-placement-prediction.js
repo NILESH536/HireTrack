@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('PlacementPredictions', {
+    await queryInterface.createTable('placement_predictions', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -12,8 +12,7 @@ module.exports = {
       student_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: {
-          model: 'Students',
+        references: { model: 'students',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -63,20 +62,20 @@ module.exports = {
         type: Sequelize.JSONB,
         defaultValue: [],
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
     });
 
-    await queryInterface.addIndex('PlacementPredictions', ['student_id', 'createdAt']);
+    await queryInterface.addIndex('placement_predictions', ['student_id', 'created_at']);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('PlacementPredictions');
+    await queryInterface.dropTable('placement_predictions');
   }
 };

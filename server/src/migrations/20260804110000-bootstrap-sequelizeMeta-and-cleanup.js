@@ -76,7 +76,7 @@ module.exports = {
     const [allEmailIndexes] = await queryInterface.sequelize.query(`
       SELECT indexname FROM pg_indexes
       WHERE schemaname = 'public'
-        AND tablename = 'Users'
+        AND tablename = 'users'
         AND indexname LIKE 'Users_email_key%'
       ORDER BY indexname;
     `);
@@ -92,7 +92,7 @@ module.exports = {
       // Try DROP CONSTRAINT first (for unique constraints), then DROP INDEX
       try {
         await queryInterface.sequelize.query(
-          `ALTER TABLE "Users" DROP CONSTRAINT IF EXISTS "${indexName}";`
+          `ALTER TABLE users DROP CONSTRAINT IF EXISTS "${indexName}";`
         );
         console.log(`  [dropped constraint] ${indexName}`);
       } catch (err) {
@@ -112,21 +112,21 @@ module.exports = {
     console.log('[bootstrap] Adding missing performance indexes...');
 
     const performanceIndexes = [
-      { table: 'Applications', columns: ['student_id'], name: 'idx_applications_student_id' },
-      { table: 'Applications', columns: ['drive_id'],   name: 'idx_applications_drive_id' },
-      { table: 'Applications', columns: ['student_id', 'drive_id'], name: 'idx_applications_student_drive', unique: true },
-      { table: 'DriveMatches', columns: ['student_id'], name: 'idx_drive_matches_student_id' },
-      { table: 'DriveMatches', columns: ['drive_id'],   name: 'idx_drive_matches_drive_id' },
-      { table: 'InterviewSlots', columns: ['application_id'], name: 'idx_interview_slots_application_id' },
-      { table: 'MockInterviewAttempts', columns: ['student_id'], name: 'idx_mock_interviews_student_id' },
-      { table: 'AssessmentAttempts', columns: ['student_id'],   name: 'idx_assessment_attempts_student_id' },
-      { table: 'AssessmentAttempts', columns: ['assessment_id'], name: 'idx_assessment_attempts_assessment_id' },
-      { table: 'Resumes', columns: ['student_id'], name: 'idx_resumes_student_id' },
-      { table: 'Resumes', columns: ['student_id', 'is_primary'], name: 'idx_resumes_primary' },
-      { table: 'Notifications', columns: ['user_id'], name: 'idx_notifications_user_id' },
-      { table: 'PlacementPredictions', columns: ['student_id'], name: 'idx_placement_predictions_student_id' },
-      { table: 'LearningRoadmaps', columns: ['student_id'], name: 'idx_learning_roadmaps_student_id' },
-      { table: 'AIExplanations', columns: ['entity_id', 'entity_type'], name: 'idx_ai_explanations_entity' },
+      { table: 'applications', columns: ['student_id'], name: 'idx_applications_student_id' },
+      { table: 'applications', columns: ['drive_id'],   name: 'idx_applications_drive_id' },
+      { table: 'applications', columns: ['student_id', 'drive_id'], name: 'idx_applications_student_drive', unique: true },
+      { table: 'drive_matches', columns: ['student_id'], name: 'idx_drive_matches_student_id' },
+      { table: 'drive_matches', columns: ['drive_id'],   name: 'idx_drive_matches_drive_id' },
+      { table: 'interview_slots', columns: ['application_id'], name: 'idx_interview_slots_application_id' },
+      { table: 'mock_interview_attempts', columns: ['student_id'], name: 'idx_mock_interviews_student_id' },
+      { table: 'assessment_attempts', columns: ['student_id'],   name: 'idx_assessment_attempts_student_id' },
+      { table: 'assessment_attempts', columns: ['assessment_id'], name: 'idx_assessment_attempts_assessment_id' },
+      { table: 'resumes', columns: ['student_id'], name: 'idx_resumes_student_id' },
+      { table: 'resumes', columns: ['student_id', 'is_primary'], name: 'idx_resumes_primary' },
+      { table: 'notifications', columns: ['user_id'], name: 'idx_notifications_user_id' },
+      { table: 'placement_predictions', columns: ['student_id'], name: 'idx_placement_predictions_student_id' },
+      { table: 'learning_roadmaps', columns: ['student_id'], name: 'idx_learning_roadmaps_student_id' },
+      { table: 'ai_explanations', columns: ['entity_id', 'entity_type'], name: 'idx_ai_explanations_entity' },
     ];
 
     for (const idx of performanceIndexes) {
@@ -160,21 +160,21 @@ module.exports = {
 
     // Remove performance indexes
     const indexesToRemove = [
-      ['Applications', 'idx_applications_student_id'],
-      ['Applications', 'idx_applications_drive_id'],
-      ['Applications', 'idx_applications_student_drive'],
-      ['DriveMatches', 'idx_drive_matches_student_id'],
-      ['DriveMatches', 'idx_drive_matches_drive_id'],
-      ['InterviewSlots', 'idx_interview_slots_application_id'],
-      ['MockInterviewAttempts', 'idx_mock_interviews_student_id'],
-      ['AssessmentAttempts', 'idx_assessment_attempts_student_id'],
-      ['AssessmentAttempts', 'idx_assessment_attempts_assessment_id'],
-      ['Resumes', 'idx_resumes_student_id'],
-      ['Resumes', 'idx_resumes_primary'],
-      ['Notifications', 'idx_notifications_user_id'],
-      ['PlacementPredictions', 'idx_placement_predictions_student_id'],
-      ['LearningRoadmaps', 'idx_learning_roadmaps_student_id'],
-      ['AIExplanations', 'idx_ai_explanations_entity'],
+      ['applications', 'idx_applications_student_id'],
+      ['applications', 'idx_applications_drive_id'],
+      ['applications', 'idx_applications_student_drive'],
+      ['drive_matches', 'idx_drive_matches_student_id'],
+      ['drive_matches', 'idx_drive_matches_drive_id'],
+      ['interview_slots', 'idx_interview_slots_application_id'],
+      ['mock_interview_attempts', 'idx_mock_interviews_student_id'],
+      ['assessment_attempts', 'idx_assessment_attempts_student_id'],
+      ['assessment_attempts', 'idx_assessment_attempts_assessment_id'],
+      ['resumes', 'idx_resumes_student_id'],
+      ['resumes', 'idx_resumes_primary'],
+      ['notifications', 'idx_notifications_user_id'],
+      ['placement_predictions', 'idx_placement_predictions_student_id'],
+      ['learning_roadmaps', 'idx_learning_roadmaps_student_id'],
+      ['ai_explanations', 'idx_ai_explanations_entity'],
     ];
 
     for (const [table, name] of indexesToRemove) {

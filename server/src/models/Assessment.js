@@ -40,6 +40,6 @@ const Assessment = sequelize.define('Assessment', {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
   }
-});
+}, { tableName: 'assessments', underscored: true });
 
 module.exports = Assessment;

@@ -1,0 +1,21 @@
+version: "3.8"
+
+# Development Overrides
+# Use this with: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+services:
+  server:
+    environment:
+      - NODE_ENV=development
+    volumes:
+      # Mount the local codebase into the container for hot reloading (if using nodemon)
+      - ./server:/app
+      - /app/node_modules # Prevent host node_modules from overwriting container node_modules
+    command: ["npm", "run", "dev"] # Override default CMD to use nodemon
+
+  client:
+    # Note: Client dev override is complex if using nginx. Usually, developers
+    # run `npm start` locally for frontend hot-reloading. This container is 
+    # generally just used for testing the production nginx build locally.
+    environment:
+      - NODE_ENV=development

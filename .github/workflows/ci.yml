@@ -1,0 +1,52 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  backend-test:
+    name: Backend CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'server/package-lock.json'
+          
+      - name: Install dependencies
+        working-directory: ./server
+        run: npm ci
+        
+      - name: Run Tests
+        working-directory: ./server
+        run: npm test
+
+  frontend-build:
+    name: Frontend CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'client/package-lock.json'
+          
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+        
+      - name: Build Application
+        working-directory: ./client
+        run: npm run build
+        env:
+          CI: false # Disable treating warnings as errors in CI for now

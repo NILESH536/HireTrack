@@ -3,11 +3,11 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const tableInfo = await queryInterface.describeTable('DriveMatches');
+    const tableInfo = await queryInterface.describeTable('drive_matches');
     
     const removeCol = async (colName) => {
       if (tableInfo[colName]) {
-        await queryInterface.removeColumn('DriveMatches', colName);
+        await queryInterface.removeColumn('drive_matches', colName);
       }
     };
 
@@ -22,12 +22,12 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     // Re-adding columns in case of rollback
-    await queryInterface.addColumn('DriveMatches', 'confidence_level', { type: Sequelize.STRING, allowNull: true });
-    await queryInterface.addColumn('DriveMatches', 'matched_skills', { type: Sequelize.JSONB, defaultValue: [] });
-    await queryInterface.addColumn('DriveMatches', 'missing_skills', { type: Sequelize.JSONB, defaultValue: [] });
-    await queryInterface.addColumn('DriveMatches', 'strengths', { type: Sequelize.JSONB, defaultValue: [] });
-    await queryInterface.addColumn('DriveMatches', 'weaknesses', { type: Sequelize.JSONB, defaultValue: [] });
-    await queryInterface.addColumn('DriveMatches', 'improvement_suggestions', { type: Sequelize.JSONB, defaultValue: [] });
-    await queryInterface.addColumn('DriveMatches', 'reasoning_summary', { type: Sequelize.TEXT, allowNull: true });
+    await queryInterface.addColumn('drive_matches', 'confidence_level', { type: Sequelize.STRING, allowNull: true });
+    await queryInterface.addColumn('drive_matches', 'matched_skills', { type: Sequelize.JSONB, defaultValue: [] });
+    await queryInterface.addColumn('drive_matches', 'missing_skills', { type: Sequelize.JSONB, defaultValue: [] });
+    await queryInterface.addColumn('drive_matches', 'strengths', { type: Sequelize.JSONB, defaultValue: [] });
+    await queryInterface.addColumn('drive_matches', 'weaknesses', { type: Sequelize.JSONB, defaultValue: [] });
+    await queryInterface.addColumn('drive_matches', 'improvement_suggestions', { type: Sequelize.JSONB, defaultValue: [] });
+    await queryInterface.addColumn('drive_matches', 'reasoning_summary', { type: Sequelize.TEXT, allowNull: true });
   }
 };

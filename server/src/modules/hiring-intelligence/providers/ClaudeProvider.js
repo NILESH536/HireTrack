@@ -145,12 +145,16 @@ Return ONLY valid JSON, no markdown formatting.`,
 
       const systemPrompt = `You are an expert ATS (Applicant Tracking System) resume analyzer and career advisor.
 
-Analyze the following resume thoroughly and return a JSON object with EXACTLY these fields:
+FIRST, determine if the provided text is genuinely a resume or CV. If it is a syllabus, random notes, an article, or any other unrelated document, set "isResume" to false and provide a "rejectionReason". Do not attempt to score or analyze non-resume documents.
 
-1. "atsScore": number 0-100 (overall ATS compatibility score)
-2. "formatScore": number 0-100 (how well-formatted for ATS parsing)
-3. "contentScore": number 0-100 (quality of content, action verbs, quantified achievements)
-4. "keywordScore": number 0-100 (relevant industry keyword density)
+Analyze the following document and return a JSON object with EXACTLY these fields:
+
+1. "isResume": boolean
+2. "rejectionReason": string (Only if isResume is false, explaining why the document was rejected)
+3. "atsScore": number 0-100 (overall ATS compatibility score)
+4. "formatScore": number 0-100 (how well-formatted for ATS parsing)
+5. "contentScore": number 0-100 (quality of content, action verbs, quantified achievements)
+6. "keywordScore": number 0-100 (relevant industry keyword density)
 5. "matchingSkills": array of strings — skills found in the resume that are strong and relevant
 6. "missingSkills": array of objects {skill: string, importance: "critical"|"important"|"nice-to-have"} — skills missing from the resume that are important for the target role
 7. "futureSkills": array of objects {skill: string, reason: string, priority: "high"|"medium"|"low", resources: string} — skills the student should learn next for their career goal "${studentContext.careerGoal || 'Software Developer'}" considering their branch "${studentContext.branch || 'CS'}"

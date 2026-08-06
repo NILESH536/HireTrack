@@ -45,6 +45,6 @@ const AssessmentAttempt = sequelize.define('AssessmentAttempt', {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-});
+}, { tableName: 'assessment_attempts', underscored: true });
 
 module.exports = AssessmentAttempt;

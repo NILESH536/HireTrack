@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('AuditLogs', {
+    await queryInterface.createTable('audit_logs', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -12,7 +12,7 @@ module.exports = {
       actor_id: {
         type: Sequelize.UUID,
         allowNull: true,
-        references: { model: 'Users', key: 'id' },
+        references: { model: 'users', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
@@ -22,11 +22,11 @@ module.exports = {
       metadata: { type: Sequelize.JSONB, allowNull: true },
       ip_address: { type: Sequelize.STRING, allowNull: true },
       user_agent: { type: Sequelize.STRING, allowNull: true },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
 
-    await queryInterface.createTable('VerificationRequests', {
+    await queryInterface.createTable('verification_requests', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -46,15 +46,15 @@ module.exports = {
       verified_by: {
         type: Sequelize.UUID,
         allowNull: true,
-        references: { model: 'Users', key: 'id' },
+        references: { model: 'users', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
 
-    await queryInterface.createTable('Documents', {
+    await queryInterface.createTable('documents', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -78,42 +78,42 @@ module.exports = {
       verified_by: {
         type: Sequelize.UUID,
         allowNull: true,
-        references: { model: 'Users', key: 'id' },
+        references: { model: 'users', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
 
-    await queryInterface.addColumn('Students', 'is_verified', {
+    await queryInterface.addColumn('students', 'is_verified', {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     });
-    await queryInterface.addColumn('Students', 'verified_at', {
+    await queryInterface.addColumn('students', 'verified_at', {
       type: Sequelize.DATE,
       allowNull: true,
     });
 
-    await queryInterface.addColumn('Companies', 'is_verified', {
+    await queryInterface.addColumn('companies', 'is_verified', {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     });
-    await queryInterface.addColumn('Companies', 'approval_status', {
+    await queryInterface.addColumn('companies', 'approval_status', {
       type: Sequelize.ENUM('PENDING', 'APPROVED', 'REJECTED'),
       defaultValue: 'PENDING',
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn('Companies', 'approval_status');
-    await queryInterface.removeColumn('Companies', 'is_verified');
-    await queryInterface.removeColumn('Students', 'verified_at');
-    await queryInterface.removeColumn('Students', 'is_verified');
+    await queryInterface.removeColumn('companies', 'approval_status');
+    await queryInterface.removeColumn('companies', 'is_verified');
+    await queryInterface.removeColumn('students', 'verified_at');
+    await queryInterface.removeColumn('students', 'is_verified');
 
-    await queryInterface.dropTable('Documents');
-    await queryInterface.dropTable('VerificationRequests');
-    await queryInterface.dropTable('AuditLogs');
+    await queryInterface.dropTable('documents');
+    await queryInterface.dropTable('verification_requests');
+    await queryInterface.dropTable('audit_logs');
 
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_VerificationRequests_entity_type";');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_VerificationRequests_status";');

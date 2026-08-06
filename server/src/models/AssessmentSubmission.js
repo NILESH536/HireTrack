@@ -36,6 +36,6 @@ const AssessmentSubmission = sequelize.define('AssessmentSubmission', {
     allowNull: true,
     field: 'evaluation_feedback',
   }
-});
+}, { tableName: 'assessment_submissions', underscored: true });
 
 module.exports = AssessmentSubmission;

@@ -1,0 +1,21 @@
+version: "3.8"
+
+# Production Overrides
+# Use this with: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  server:
+    restart: always # Aggressive restart policy for production
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  client:
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

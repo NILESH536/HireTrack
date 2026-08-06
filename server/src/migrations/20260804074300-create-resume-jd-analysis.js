@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ResumeJDAnalyses', {
+    await queryInterface.createTable('resume_jd_analyses', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -12,8 +12,7 @@ module.exports = {
       student_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: {
-          model: 'Students',
+        references: { model: 'students',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -22,8 +21,7 @@ module.exports = {
       resume_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: {
-          model: 'Resumes',
+        references: { model: 'resumes',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -32,8 +30,7 @@ module.exports = {
       drive_id: {
         type: Sequelize.UUID,
         allowNull: true,
-        references: {
-          model: 'Drives',
+        references: { model: 'drives',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -79,21 +76,21 @@ module.exports = {
         type: Sequelize.JSONB,
         defaultValue: [],
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
     });
 
-    await queryInterface.addIndex('ResumeJDAnalyses', ['resume_id', 'drive_id']);
-    await queryInterface.addIndex('ResumeJDAnalyses', ['resume_id', 'custom_jd_hash']);
+    await queryInterface.addIndex('resume_jd_analyses', ['resume_id', 'drive_id']);
+    await queryInterface.addIndex('resume_jd_analyses', ['resume_id', 'custom_jd_hash']);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ResumeJDAnalyses');
+    await queryInterface.dropTable('resume_jd_analyses');
   }
 };

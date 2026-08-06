@@ -30,8 +30,7 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-}, {
-  hooks: {
+}, { hooks: {
     beforeCreate: async (user) => {
       if (user.password) {
         user.password = await bcrypt.hash(user.password, 10);
@@ -42,8 +41,7 @@ const User = sequelize.define('User', {
         user.password = await bcrypt.hash(user.password, 10);
       }
     },
-  },
-});
+  },tableName: 'users', underscored: true });
 
 User.prototype.comparePassword = async function (password) {
   return bcrypt.compare(password, this.password);

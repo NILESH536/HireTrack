@@ -72,37 +72,37 @@ function makeClient() {
 
 // Expected tables matching all 27 Sequelize models (Sequelize auto-pluralises)
 const EXPECTED_TABLES = [
-  'Users', 'Students', 'Companies', 'Drives', 'Applications',
-  'InterviewSlots', 'Notifications', 'ChatMessages', 'DriveMatches',
-  'AIExplanations', 'Resumes', 'ResumeJDAnalyses', 'PlacementPredictions',
-  'Assessments', 'Questions', 'AssessmentAttempts', 'AssessmentSubmissions',
-  'WorkflowTemplates', 'WorkflowStages', 'ApplicationTransitions',
-  'AuditLogs', 'VerificationRequests', 'Documents',
-  'MockInterviewAttempts', 'MockInterviewQuestions', 'LearningRoadmaps',
+  'users', 'students', 'companies', 'drives', 'applications',
+  'interview_slots', 'notifications', 'chat_messages', 'drive_matches',
+  'ai_explanations', 'resumes', 'resume_jd_analyses', 'placement_predictions',
+  'assessments', 'questions', 'assessment_attempts', 'assessment_submissions',
+  'workflow_templates', 'workflow_stages', 'application_transitions',
+  'audit_logs', 'verification_requests', 'documents',
+  'mock_interview_attempts', 'MockInterviewquestions', 'learning_roadmaps',
   'SequelizeMeta',
 ];
 
 // Column requirements for core tables
 const COLUMN_CHECKS = {
-  'Applications': ['id','student_id','drive_id','applied_at','cv_screening',
+  'applications': ['id','student_id','drive_id','applied_at','cv_screening',
                    'aptitude_test','technical_round_1','technical_round_2',
                    'hr_round','final_result','current_stage_id','rejection_reason'],
-  'Students':     ['id','user_id','branch','cgpa','skills','career_goal',
+  'students':     ['id','user_id','branch','cgpa','skills','career_goal',
                    'placed','resume_text','resume_path','is_verified','verified_at'],
-  'Users':        ['id','email','password','name','role','approved'],
-  'Drives':       ['id','company_id','job_role','job_description','salary_lpa',
+  'users':        ['id','email','password','name','role','approved'],
+  'drives':       ['id','company_id','job_role','job_description','salary_lpa',
                    'location','job_type','min_cgpa','eligible_branches',
                    'application_deadline','drive_date','active',
                    'assessment_id','workflow_template_id'],
-  'Notifications':['id','user_id','message','type','read','action_url','priority'],
-  'Resumes':      ['id','student_id','version','is_primary','file_url',
+  'notifications':['id','user_id','message','type','read','action_url','priority'],
+  'resumes':      ['id','student_id','version','is_primary','file_url',
                    'raw_text','ats_score','structured_data','ai_summary'],
-  'DriveMatches': ['id','student_id','drive_id','match_score',
+  'drive_matches': ['id','student_id','drive_id','match_score',
                    'expected_shortlisting_probability'],
 };
 
-const COUNT_TABLES = ['Users','Students','Companies','Drives',
-                      'Applications','Notifications','ChatMessages','InterviewSlots'];
+const COUNT_TABLES = ['users','students','companies','drives',
+                      'applications','notifications','chat_messages','interview_slots'];
 
 async function run() {
   // ─── Step 1: Connect ───────────────────────────────────────────────────────

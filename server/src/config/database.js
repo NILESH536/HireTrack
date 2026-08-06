@@ -13,6 +13,23 @@ const sequelize = process.env.DATABASE_URL
         ssl: { require: true, rejectUnauthorized: false },
       },
       pool: { max: 10, min: 0, acquire: 30000, idle: 10000 },
+      hooks: {
+        beforeConnect: async (config) => {
+          if (config.host && config.host.includes('neon.tech')) {
+            try {
+              const ips = await require('dns').promises.resolve4(config.host);
+              if (ips.length > 0) {
+                config.dialectOptions = config.dialectOptions || {};
+                config.dialectOptions.ssl = config.dialectOptions.ssl || {};
+                config.dialectOptions.ssl.servername = config.host;
+                config.host = ips[0];
+              }
+            } catch (e) {
+              // Ignore DNS resolution errors and let pg try
+            }
+          }
+        }
+      }
     })
   : new Sequelize(
       process.env.DB_NAME || 'hiretrack',

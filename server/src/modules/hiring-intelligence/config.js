@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const config = {
   // Provider can be 'GEMINI', 'CLAUDE', 'OPENAI', 'MOCK'
-  defaultProvider: process.env.AI_PROVIDER || 'GEMINI',
+  defaultProvider: process.env.AI_PROVIDER || 'OPENAI',
 
   providers: {
     GEMINI: {
@@ -15,7 +15,7 @@ const config = {
     },
     OPENAI: {
       apiKey: process.env.OPENAI_API_KEY,
-      defaultModel: 'gpt-4o',
+      defaultModel: 'openai/gpt-4o-mini',
     },
   },
 

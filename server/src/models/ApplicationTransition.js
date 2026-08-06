@@ -41,6 +41,6 @@ const ApplicationTransition = sequelize.define('ApplicationTransition', {
     allowNull: false, // User ID who made the change (Recruiter or System)
     field: 'action_by',
   },
-});
+}, { tableName: 'application_transitions', underscored: true });
 
 module.exports = ApplicationTransition;

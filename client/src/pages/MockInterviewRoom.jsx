@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMic, FiVideo, FiSend, FiPlayCircle, FiXCircle } from 'react-icons/fi';
+import { FiMic, FiVideo, FiSend, FiPlayCircle, FiXCircle, FiCheckCircle, FiAlertTriangle } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import Navbar from '../components/common/Navbar';

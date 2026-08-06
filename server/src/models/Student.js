@@ -54,6 +54,6 @@ const Student = sequelize.define('Student', {
     allowNull: true,
     field: 'verified_at',
   },
-});
+}, { tableName: 'students', underscored: true });
 
 module.exports = Student;

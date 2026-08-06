@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('AIExplanations', {
+    await queryInterface.createTable('ai_explanations', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -45,21 +45,21 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
     });
 
     // Add an index for faster polymorphic lookups
-    await queryInterface.addIndex('AIExplanations', ['entity_id', 'entity_type']);
+    await queryInterface.addIndex('ai_explanations', ['entity_id', 'entity_type']);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('AIExplanations');
+    await queryInterface.dropTable('ai_explanations');
   },
 };

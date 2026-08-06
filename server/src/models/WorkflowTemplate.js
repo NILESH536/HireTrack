@@ -21,6 +21,6 @@ const WorkflowTemplate = sequelize.define('WorkflowTemplate', {
     defaultValue: false,
     field: 'is_default',
   },
-});
+}, { tableName: 'workflow_templates', underscored: true });
 
 module.exports = WorkflowTemplate;

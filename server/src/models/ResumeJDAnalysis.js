@@ -72,6 +72,6 @@ const ResumeJDAnalysis = sequelize.define('ResumeJDAnalysis', {
     defaultValue: [],
     field: 'weak_sections',
   },
-});
+}, { tableName: 'resume_jd_analyses', underscored: true });
 
 module.exports = ResumeJDAnalysis;

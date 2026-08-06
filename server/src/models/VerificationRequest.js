@@ -31,6 +31,6 @@ const VerificationRequest = sequelize.define('VerificationRequest', {
     allowNull: true, // Admin or Placement Officer
     field: 'verified_by',
   },
-});
+}, { tableName: 'verification_requests', underscored: true });
 
 module.exports = VerificationRequest;

@@ -51,6 +51,6 @@ const AIExplanation = sequelize.define('AIExplanation', {
     allowNull: true,
     field: 'reasoning_summary',
   },
-});
+}, { tableName: 'ai_explanations', underscored: true });
 
 module.exports = AIExplanation;

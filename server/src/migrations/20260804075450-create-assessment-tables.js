@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Assessments', {
+    await queryInterface.createTable('assessments', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -12,7 +12,7 @@ module.exports = {
       company_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'Companies', key: 'id' },
+        references: { model: 'companies', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
@@ -22,11 +22,11 @@ module.exports = {
       difficulty: { type: Sequelize.ENUM('EASY', 'MEDIUM', 'HARD'), defaultValue: 'MEDIUM' },
       instructions: { type: Sequelize.TEXT, allowNull: true },
       active: { type: Sequelize.BOOLEAN, defaultValue: true },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
 
-    await queryInterface.createTable('Questions', {
+    await queryInterface.createTable('questions', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -35,7 +35,7 @@ module.exports = {
       assessment_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'Assessments', key: 'id' },
+        references: { model: 'assessments', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
@@ -45,11 +45,11 @@ module.exports = {
       mcq_options: { type: Sequelize.JSONB, allowNull: true },
       correct_answer: { type: Sequelize.TEXT, allowNull: true },
       test_cases: { type: Sequelize.JSONB, allowNull: true },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
 
-    await queryInterface.createTable('AssessmentAttempts', {
+    await queryInterface.createTable('assessment_attempts', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -58,21 +58,21 @@ module.exports = {
       student_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'Students', key: 'id' },
+        references: { model: 'students', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       assessment_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'Assessments', key: 'id' },
+        references: { model: 'assessments', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       drive_id: {
         type: Sequelize.UUID,
         allowNull: true,
-        references: { model: 'Drives', key: 'id' },
+        references: { model: 'drives', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
@@ -81,11 +81,11 @@ module.exports = {
       status: { type: Sequelize.ENUM('IN_PROGRESS', 'SUBMITTED', 'EVALUATED'), defaultValue: 'IN_PROGRESS' },
       total_score: { type: Sequelize.FLOAT, defaultValue: 0 },
       passed: { type: Sequelize.BOOLEAN, allowNull: true },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
 
-    await queryInterface.createTable('AssessmentSubmissions', {
+    await queryInterface.createTable('assessment_submissions', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -94,14 +94,14 @@ module.exports = {
       attempt_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'AssessmentAttempts', key: 'id' },
+        references: { model: 'assessment_attempts', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       question_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'Questions', key: 'id' },
+        references: { model: 'questions', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
@@ -109,18 +109,18 @@ module.exports = {
       is_correct: { type: Sequelize.BOOLEAN, allowNull: true },
       score: { type: Sequelize.FLOAT, defaultValue: 0 },
       evaluation_feedback: { type: Sequelize.TEXT, allowNull: true },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
 
-    await queryInterface.addIndex('AssessmentAttempts', ['student_id', 'assessment_id']);
+    await queryInterface.addIndex('assessment_attempts', ['student_id', 'assessment_id']);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('AssessmentSubmissions');
-    await queryInterface.dropTable('AssessmentAttempts');
-    await queryInterface.dropTable('Questions');
-    await queryInterface.dropTable('Assessments');
+    await queryInterface.dropTable('assessment_submissions');
+    await queryInterface.dropTable('assessment_attempts');
+    await queryInterface.dropTable('questions');
+    await queryInterface.dropTable('assessments');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_Questions_type";');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_Assessments_difficulty";');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_AssessmentAttempts_status";');

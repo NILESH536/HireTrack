@@ -14,7 +14,7 @@ class InterviewCoachService {
       interviewType, 
       jobRole, 
       resumeText, 
-      5 // Let's do 5 questions per session
+      15 // Generate 15 level-wise questions
     );
 
     // Persist attempt
@@ -63,10 +63,23 @@ class InterviewCoachService {
     const maxScore = attempt.questions.length * 10;
     const overallScore = Math.round((totalScore / maxScore) * 100);
 
-    // Simple feedback aggregation
+    // Format transcript for ChatGPT verdict
+    const transcript = attempt.questions.map(q => ({
+      question: q.question,
+      answer: q.userAnswer || '[No Answer]',
+      score: q.score,
+      feedback: q.aiFeedback?.feedback
+    }));
+
+    // Get comprehensive verdict from ChatGPT
+    const aiVerdict = await HiringIntelligenceService.provider.generateInterviewVerdict(transcript);
+
+    // Merge verdict with strengths and weaknesses
     const feedback = {
-      strengths: attempt.questions.filter(q => q.score >= 7).map(q => q.aiFeedback?.feedback),
-      weaknesses: attempt.questions.filter(q => q.score <= 7).map(q => q.aiFeedback?.improvement),
+      verdict: aiVerdict.verdict,
+      hireDecision: aiVerdict.hireDecision,
+      strengths: aiVerdict.strengths || attempt.questions.filter(q => q.score >= 7).map(q => q.aiFeedback?.feedback),
+      weaknesses: aiVerdict.weaknesses || attempt.questions.filter(q => q.score <= 7).map(q => q.aiFeedback?.improvement),
     };
 
     attempt.overallScore = overallScore;

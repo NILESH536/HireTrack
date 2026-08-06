@@ -35,6 +35,6 @@ const InterviewSlot = sequelize.define('InterviewSlot', {
     type: DataTypes.TEXT,
     allowNull: true,
   },
-});
+}, { tableName: 'interview_slots', underscored: true });
 
 module.exports = InterviewSlot;

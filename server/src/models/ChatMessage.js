@@ -20,6 +20,6 @@ const ChatMessage = sequelize.define('ChatMessage', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
-});
+}, { tableName: 'chat_messages', underscored: true });
 
 module.exports = ChatMessage;

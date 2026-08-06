@@ -27,6 +27,6 @@ const DriveMatch = sequelize.define('DriveMatch', {
     allowNull: true,
     field: 'expected_shortlisting_probability',
   },
-});
+}, { tableName: 'drive_matches', underscored: true });
 
 module.exports = DriveMatch;

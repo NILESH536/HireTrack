@@ -38,6 +38,6 @@ const Document = sequelize.define('Document', {
     allowNull: true,
     field: 'verified_by',
   },
-});
+}, { tableName: 'documents', underscored: true });
 
 module.exports = Document;

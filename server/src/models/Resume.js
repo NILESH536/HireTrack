@@ -47,6 +47,6 @@ const Resume = sequelize.define('Resume', {
     allowNull: true,
     field: 'ai_summary',
   },
-});
+}, { tableName: 'resumes', underscored: true });
 
 module.exports = Resume;

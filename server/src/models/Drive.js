@@ -72,6 +72,6 @@ const Drive = sequelize.define('Drive', {
     allowNull: true,
     field: 'workflow_template_id',
   },
-});
+}, { tableName: 'drives', underscored: true });
 
 module.exports = Drive;

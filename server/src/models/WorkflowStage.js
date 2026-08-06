@@ -27,6 +27,6 @@ const WorkflowStage = sequelize.define('WorkflowStage', {
     allowNull: false,
     field: 'order_index',
   },
-});
+}, { tableName: 'workflow_stages', underscored: true });
 
 module.exports = WorkflowStage;

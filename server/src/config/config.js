@@ -1,8 +1,13 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
 // Shared SSL options for Neon/production
-const sslOptions = { ssl: { require: true, rejectUnauthorized: false } };
-
+const sslOptions = { 
+  ssl: { 
+    require: true, 
+    rejectUnauthorized: false,
+    ...(process.env.PG_SERVERNAME && { servername: process.env.PG_SERVERNAME })
+  } 
+};
 // If DATABASE_URL is set (Neon/Render), use it for all environments
 const databaseUrl = process.env.DATABASE_URL;
 

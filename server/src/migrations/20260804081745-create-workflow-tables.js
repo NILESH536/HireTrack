@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('WorkflowTemplates', {
+    await queryInterface.createTable('workflow_templates', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -12,17 +12,17 @@ module.exports = {
       company_id: {
         type: Sequelize.UUID,
         allowNull: true,
-        references: { model: 'Companies', key: 'id' },
+        references: { model: 'companies', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       name: { type: Sequelize.STRING, allowNull: false },
       is_default: { type: Sequelize.BOOLEAN, defaultValue: false },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
 
-    await queryInterface.createTable('WorkflowStages', {
+    await queryInterface.createTable('workflow_stages', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -31,7 +31,7 @@ module.exports = {
       template_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'WorkflowTemplates', key: 'id' },
+        references: { model: 'workflow_templates', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
@@ -42,32 +42,32 @@ module.exports = {
         defaultValue: 'CUSTOM' 
       },
       order_index: { type: Sequelize.INTEGER, allowNull: false },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
 
-    await queryInterface.addColumn('Drives', 'workflow_template_id', {
+    await queryInterface.addColumn('drives', 'workflow_template_id', {
       type: Sequelize.UUID,
       allowNull: true,
-      references: { model: 'WorkflowTemplates', key: 'id' },
+      references: { model: 'workflow_templates', key: 'id' },
       onUpdate: 'CASCADE',
       onDelete: 'SET NULL',
     });
 
-    await queryInterface.addColumn('Applications', 'current_stage_id', {
+    await queryInterface.addColumn('applications', 'current_stage_id', {
       type: Sequelize.UUID,
       allowNull: true,
-      references: { model: 'WorkflowStages', key: 'id' },
+      references: { model: 'workflow_stages', key: 'id' },
       onUpdate: 'CASCADE',
       onDelete: 'SET NULL',
     });
 
-    await queryInterface.addColumn('Applications', 'rejection_reason', {
+    await queryInterface.addColumn('applications', 'rejection_reason', {
       type: Sequelize.TEXT,
       allowNull: true,
     });
 
-    await queryInterface.createTable('ApplicationTransitions', {
+    await queryInterface.createTable('application_transitions', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -76,21 +76,21 @@ module.exports = {
       application_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'Applications', key: 'id' },
+        references: { model: 'applications', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       from_stage_id: {
         type: Sequelize.UUID,
         allowNull: true,
-        references: { model: 'WorkflowStages', key: 'id' },
+        references: { model: 'workflow_stages', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
       to_stage_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'WorkflowStages', key: 'id' },
+        references: { model: 'workflow_stages', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
@@ -104,22 +104,22 @@ module.exports = {
       action_by: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'Users', key: 'id' },
+        references: { model: 'users', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      created_at: { allowNull: false, type: Sequelize.DATE },
+      updated_at: { allowNull: false, type: Sequelize.DATE },
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ApplicationTransitions');
-    await queryInterface.removeColumn('Applications', 'rejection_reason');
-    await queryInterface.removeColumn('Applications', 'current_stage_id');
-    await queryInterface.removeColumn('Drives', 'workflow_template_id');
-    await queryInterface.dropTable('WorkflowStages');
-    await queryInterface.dropTable('WorkflowTemplates');
+    await queryInterface.dropTable('application_transitions');
+    await queryInterface.removeColumn('applications', 'rejection_reason');
+    await queryInterface.removeColumn('applications', 'current_stage_id');
+    await queryInterface.removeColumn('drives', 'workflow_template_id');
+    await queryInterface.dropTable('workflow_stages');
+    await queryInterface.dropTable('workflow_templates');
 
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_WorkflowStages_stage_type";');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_ApplicationTransitions_status";');

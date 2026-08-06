@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Resumes', {
+    await queryInterface.createTable('resumes', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -12,8 +12,7 @@ module.exports = {
       student_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: {
-          model: 'Students',
+        references: { model: 'students',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -48,20 +47,20 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
     });
 
-    await queryInterface.addIndex('Resumes', ['student_id', 'is_primary']);
+    await queryInterface.addIndex('resumes', ['student_id', 'is_primary']);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Resumes');
+    await queryInterface.dropTable('resumes');
   }
 };

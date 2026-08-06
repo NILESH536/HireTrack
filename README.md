@@ -1,76 +1,82 @@
-# HireTrack
+# HireTrack V2
 
-An intelligent, next-generation Campus Recruitment & Hiring Platform powered by Generative AI.
+HireTrack V2 is an intelligent Campus Placement Platform designed to streamline hiring workflows for students, universities, and companies.
 
-HireTrack transforms traditional placement processes by integrating a powerful **Hiring Intelligence Engine**, enabling automated resume analysis, AI-driven job matching, interview coaching, coding assessments, and personalized learning roadmaps.
+## Architecture Evolution
+HireTrack has evolved from a monolithic MVP to a production-ready, cloud-native architecture. 
+- **Database**: Serverless PostgreSQL via Neon.
+- **Backend**: Express.js (Node.js) with Sequelize ORM.
+- **Frontend**: React (SPA) with Vite/Webpack.
+- **AI Integrations**: OpenRouter / Gemini / Claude compatible backend.
 
-## 🚀 Features
+---
 
-- **Resume Intelligence**: Automated ATS scoring, skill extraction, and personalized feedback.
-- **AI Job Matching**: Explainable AI recommendations matching students to the right drives.
-- **Career Intelligence**: Predicted placement likelihoods and trajectory analysis.
-- **Interview Coach**: Interactive LLM-powered mock interviews tailored to the student's resume.
-- **Learning Engine**: Generation of dynamic 3-week learning roadmaps to bridge skill gaps.
-- **Coding Assessments**: Integrated recruitment tests and automated evaluations.
-- **Workflow Automation**: Intelligent event-driven notifications across the entire application lifecycle.
-- **Compliance & Trust**: Audit logs and role-based access control.
+## Environment Variables & Secrets
 
-## 🛠 Tech Stack
+To run this project, you will need the following Environment Variables. 
 
-- **Backend**: Node.js, Express.js
-- **Database**: PostgreSQL with Sequelize ORM
-- **AI Integration**: Google Gemini via `@google/genai`
-- **Architecture**: Modular Monolith
+**Backend (`server/.env`)**
+- `DATABASE_URL`: Your Neon PostgreSQL connection string (e.g. `postgresql://user:pass@ep-rest-of-url.neon.tech/neondb?sslmode=require`)
+- `JWT_SECRET`: A strong random string for signing JWTs.
+- `JWT_EXPIRES_IN`: E.g. `7d`.
+- `AI_PROVIDER`: Choose one: `OPENAI` or `GEMINI` or `CLAUDE`.
+- `OPENAI_API_KEY`: Required if using OpenRouter / OpenAI.
+- `GEMINI_API_KEY`: Required if using Gemini.
 
-## 📦 Setup & Installation
+**Frontend (`client/.env`)**
+- `REACT_APP_API_URL`: `/api` (Defaults to this, routed via Nginx in Docker).
 
-1. **Prerequisites**
-   - Node.js (v18+)
-   - PostgreSQL
-   - A valid Google Gemini API Key
+---
 
-2. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-org/hiretrack.git
-   cd hiretrack
-   ```
+## Development Setup
 
-3. **Install Dependencies**
+If you wish to run the project natively (without Docker):
+1. **Database**: Provision a Neon DB and place the `DATABASE_URL` in `server/.env`.
+2. **Backend**:
    ```bash
    cd server
    npm install
-   ```
-
-4. **Environment Configuration**
-   Create a `.env` file in the `server/` directory:
-   ```env
-   PORT=5000
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_NAME=hiretrack
-   DB_USER=postgres
-   DB_PASS=postgres
-   JWT_SECRET=your_jwt_secret
-   GEMINI_API_KEY=your_gemini_api_key
-   ```
-
-5. **Run Migrations**
-   ```bash
-   npx sequelize-cli db:migrate
-   ```
-
-6. **Start the Server**
-   ```bash
    npm run dev
    ```
+3. **Frontend**:
+   ```bash
+   cd client
+   npm install
+   npm start
+   ```
 
-## 📖 Documentation
+---
 
-- [Architecture Guide](./ARCHITECTURE.md)
-- [API Reference](./API_DOCS.md)
+## Docker Setup
 
-## 🤝 Contribution Guidelines
+We use a multi-container Docker Compose setup. It automatically builds the optimized React Nginx image and the Node.js backend image.
 
-1. Follow standard clean architecture principles.
-2. Ensure new APIs use the standard `responseBuilder`.
-3. Add appropriate `asyncHandler` wrappers for all async controllers to ensure domain errors are caught.
+**Standard / Production Test**:
+```bash
+docker compose up --build -d
+```
+
+**Local Development (Hot Reloading)**:
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d
+```
+
+---
+
+## Deployment & CI/CD (GitHub Actions)
+
+This repository is strictly configured to use **GitHub Actions**. Jenkins is completely obsolete and has been removed.
+
+### Workflows
+1. **Continuous Integration** (`.github/workflows/ci.yml`): Runs on every Push/PR. Installs dependencies, lints, runs tests, and builds both the frontend and backend.
+2. **Docker Validation** (`.github/workflows/docker-validate.yml`): Validates that the `docker-compose` build process executes flawlessly.
+3. **AWS Deployment Ready** (`.github/workflows/aws-deploy.yml`): A templated workflow for deploying directly to an AWS EC2 instance over SSH.
+
+### GitHub Secrets Required for AWS EC2
+If you intend to activate the AWS deployment workflow, you must add the following Secrets to your GitHub repository:
+- `EC2_SSH_KEY`: The private PEM key for your EC2 instance.
+- `EC2_HOST`: The public IP or DNS of your EC2 instance.
+- `EC2_USER`: Usually `ec2-user` or `ubuntu`.
+- `DATABASE_URL`: Your Neon connection string.
+- `JWT_SECRET`: Your production JWT secret.
+- `OPENAI_API_KEY`: Your production AI key.

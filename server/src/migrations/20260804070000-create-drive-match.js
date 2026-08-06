@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('DriveMatches', {
+    await queryInterface.createTable('drive_matches', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -12,8 +12,7 @@ module.exports = {
       student_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: {
-          model: 'Students',
+        references: { model: 'students',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -22,8 +21,7 @@ module.exports = {
       drive_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: {
-          model: 'Drives',
+        references: { model: 'drives',
           key: 'id',
         },
         onUpdate: 'CASCADE',
@@ -65,11 +63,11 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
@@ -77,6 +75,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('DriveMatches');
+    await queryInterface.dropTable('drive_matches');
   },
 };

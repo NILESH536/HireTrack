@@ -22,6 +22,6 @@ const LearningRoadmap = sequelize.define('LearningRoadmap', {
     allowNull: false,
     defaultValue: 'ACTIVE',
   },
-});
+}, { tableName: 'learning_roadmaps', underscored: true });
 
 module.exports = LearningRoadmap;
