@@ -15,7 +15,7 @@ services:
       - PORT=5000
       # Use localhost/host network IP depending on your setup if needed, 
       # but ideally CLIENT_URL matches the public EC2 DNS/IP
-      - CLIENT_URL=http://localhost
+      - CLIENT_URL=${CLIENT_URL:-http://localhost}
     volumes:
       - server_uploads:/app/uploads
       - server_logs:/app/logs

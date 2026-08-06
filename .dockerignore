@@ -48,7 +48,6 @@ Dockerfile.*
 .dockerignore
 
 # CI & Misc
-Jenkinsfile
 README.md
 API_DOCS.md
 ARCHITECTURE.md

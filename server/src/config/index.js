@@ -13,7 +13,7 @@ const config = {
     password: process.env.DB_PASSWORD,
   },
   jwt: {
-    secret: process.env.JWT_SECRET || 'fallback_secret_for_dev',
+    secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   },
   ai: {

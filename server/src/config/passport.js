@@ -3,7 +3,7 @@ const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.JWT_SECRET || 'hirectrack-super-secret-jwt-key-2024'
+  secretOrKey: process.env.JWT_SECRET
 };
 
 passport.use(new JwtStrategy(options, async (payload, done) => {

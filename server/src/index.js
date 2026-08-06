@@ -6,6 +6,11 @@ const logger = require('./utils/logger');
 
 const PORT = process.env.PORT || 5000;
 
+if (!process.env.JWT_SECRET) {
+  logger.error('❌ FATAL ERROR: JWT_SECRET is not defined. Application cannot start securely.');
+  process.exit(1);
+}
+
 const startServer = async () => {
   try {
     await sequelize.authenticate();

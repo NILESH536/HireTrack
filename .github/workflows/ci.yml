@@ -22,7 +22,7 @@ jobs:
           
       - name: Install dependencies
         working-directory: ./server
-        run: npm ci
+        run: npm install
         
       - name: Run Tests
         working-directory: ./server
@@ -43,7 +43,7 @@ jobs:
           
       - name: Install dependencies
         working-directory: ./client
-        run: npm ci
+        run: npm install
         
       - name: Build Application
         working-directory: ./client

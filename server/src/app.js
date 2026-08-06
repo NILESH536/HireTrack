@@ -7,6 +7,7 @@ const path = require('path');
 require('./config/passport');
 
 // Import routes
+const { authLimiter, aiLimiter } = require('./middleware/rateLimiter');
 const authRoutes = require('./routes/auth');
 const studentRoutes = require('./routes/student');
 const companyRoutes = require('./routes/company');
@@ -31,14 +32,14 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(null, true); // Allow all origins in development, restrict in production if needed
+      callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true
 }));
 
 app.use(helmet({
-  crossOriginResourcePolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" },
 }));
 
 app.use(morgan('combined'));
@@ -50,22 +51,39 @@ app.use(passport.initialize());
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // ──────────── Routes ────────────
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/student/analyze-ats', aiLimiter);
 app.use('/api/student', studentRoutes);
 app.use('/api/company', companyRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/chat', chatRoutes);
+app.use('/api/chat', aiLimiter, chatRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/match', matchRoutes);
 app.use('/api/assessment', assessmentRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/workflow', workflowRoutes);
 app.use('/api/compliance', complianceRoutes);
-app.use('/api/coaching', coachingRoutes);
+app.use('/api/coaching', aiLimiter, coachingRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString(), uptime: process.uptime() });
+});
+
+// Ready check
+const { sequelize } = require('./config/database');
+app.get('/api/ready', async (req, res) => {
+  try {
+    await sequelize.authenticate();
+    res.json({ 
+      status: 'ready', 
+      db: 'connected', 
+      storage: process.env.STORAGE_PROVIDER || 'local',
+      ai: process.env.AI_PROVIDER || 'not-configured'
+    });
+  } catch (err) {
+    res.status(503).json({ status: 'not-ready', error: 'Database unavailable' });
+  }
 });
 
 // ──────────── Error Handling ────────────

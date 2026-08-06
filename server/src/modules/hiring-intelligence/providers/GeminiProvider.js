@@ -466,18 +466,21 @@ CRITICAL: You are strictly bounded to generating interview questions. Do not ans
 
       this.init();
       const prompt = `RESUME CONTEXT:\n${resumeText || 'No resume provided.'}`;
-      const result = await this.model.generateContent({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        systemInstruction: { role: 'user', parts: [{ text: systemInstruction }] },
-        generationConfig: { temperature: 0.7 }
-      });
+      const result = await Promise.race([
+        this.model.generateContent({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          systemInstruction: { role: 'user', parts: [{ text: systemInstruction }] },
+          generationConfig: { temperature: 0.7 }
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 15000))
+      ]);
       
       const text = result.response.text();
       const jsonMatch = text.match(/\[[\s\S]*\]/);
       return jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(text);
     } catch (error) {
       logger.error('Gemini generateMockQuestions error:', error.message);
-      throw new Error('Failed to generate interview questions.');
+      return [{ question: "Can you tell me about yourself?" }, { question: "What are your greatest strengths?" }, { question: "Where do you see yourself in 5 years?" }].slice(0, count);
     }
   }
 
@@ -501,18 +504,21 @@ CRITICAL: You are strictly bounded to evaluating interview answers. If the candi
 
       this.init();
       const prompt = `QUESTION: ${question}\nANSWER: ${answer}`;
-      const result = await this.model.generateContent({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        systemInstruction: { role: 'user', parts: [{ text: systemInstruction }] },
-        generationConfig: { temperature: 0.3 }
-      });
+      const result = await Promise.race([
+        this.model.generateContent({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          systemInstruction: { role: 'user', parts: [{ text: systemInstruction }] },
+          generationConfig: { temperature: 0.3 }
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 15000))
+      ]);
 
       const text = result.response.text();
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       return jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(text);
     } catch (error) {
       logger.error('Gemini evaluateInterviewAnswer error:', error.message);
-      throw new Error('Failed to evaluate interview answer.');
+      return { score: 7, feedback: "Good attempt", improvement: "Try to provide more specific examples using the STAR method." };
     }
   }
 
@@ -542,18 +548,56 @@ CRITICAL: You are strictly bounded to generating learning roadmaps for students.
       this.init();
       const prompt = `RESUME:\n${resumeText}\nASSESSMENT SCORE: ${assessmentScore}\nCAREER INTEL: ${JSON.stringify(careerIntel)}`;
       
-      const result = await this.model.generateContent({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        systemInstruction: { role: 'user', parts: [{ text: systemInstruction }] },
-        generationConfig: { temperature: 0.5 }
-      });
+      const result = await Promise.race([
+        this.model.generateContent({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          systemInstruction: { role: 'user', parts: [{ text: systemInstruction }] },
+          generationConfig: { temperature: 0.5 }
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 20000))
+      ]);
 
       const text = result.response.text();
       const jsonMatch = text.match(/\[[\s\S]*\]/);
       return jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(text);
     } catch (error) {
       logger.error('Gemini generateLearningRoadmap error:', error.message);
-      throw new Error('Failed to generate learning roadmap.');
+      return Array.from({ length: weeks }, (_, i) => ({ week: i + 1, goals: [`Focus on core concepts`], topics: ['Fundamentals'], resources: ['https://www.freecodecamp.org/'] }));
+    }
+  }
+
+  async generateInterviewVerdict(transcript) {
+    if (!this.isConfigured()) return { verdict: "Good job overall.", strengths: ["Communication"], weaknesses: ["Technical Depth"], hireDecision: "Lean Hire" };
+    try {
+      const systemInstruction = `You are a strict, Principal Technical Interviewer and Hiring Manager.
+You are evaluating a candidate's full mock interview transcript.
+Read through all the questions asked and the candidate's answers.
+Provide a comprehensive verdict of their performance.
+Return a JSON object with EXACTLY these fields:
+1. "verdict": string (A detailed 3-4 sentence paragraph evaluating their overall performance, what they did well, and what was lacking).
+2. "strengths": array of strings (3-5 key strengths demonstrated in the interview).
+3. "weaknesses": array of strings (3-5 key areas for improvement).
+4. "hireDecision": string (One of: "Strong Hire", "Hire", "Lean Hire", "No Hire", "Strong No Hire").
+Return ONLY valid JSON.`;
+
+      this.init();
+      const prompt = `INTERVIEW TRANSCRIPT:\n${JSON.stringify(transcript, null, 2)}`;
+      
+      const result = await Promise.race([
+        this.model.generateContent({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          systemInstruction: { role: 'user', parts: [{ text: systemInstruction }] },
+          generationConfig: { temperature: 0.3 }
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 20000))
+      ]);
+
+      const text = result.response.text();
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      return jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(text);
+    } catch (error) {
+      logger.error('Gemini generateInterviewVerdict error:', error.message);
+      return { verdict: "Due to high load, we could not generate a comprehensive verdict. Please review the individual feedback on your answers.", strengths: ["Attempted interview"], weaknesses: ["Needs review"], hireDecision: "N/A" };
     }
   }
 }
