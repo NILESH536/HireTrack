@@ -23,6 +23,9 @@ const coachingRoutes = require('./routes/coaching');
 
 const app = express();
 
+// Trust reverse proxies (Render, Vercel, Nginx, etc.) so rate limiters use the real client IP
+app.set('trust proxy', 1);
+
 // ──────────── Middleware Stack ────────────
 app.use(cors({
   origin: function (origin, callback) {
